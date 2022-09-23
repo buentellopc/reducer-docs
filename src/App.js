@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import AddTask from './AddTask.js';
 import TaskList from './TaskList.js';
+import {useReducer} from 'react';
 
 export default function TaskApp() {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
 
   function handleAddTask(text) {
     dispatch({
@@ -52,13 +52,15 @@ const initialTasks = [
 
 function tasksReducer(tasks, action) {
     if (action.type == 'added') {
-        return [...tasks, {id: action.id, text: action.text, done: false}]
+        return [...tasks, {id: action.id, text: action.text, done: true}]
     } 
     else if (action.type === 'changed'){
         return tasks.map(task => {
-            if (task.id === action.id){
+            if (task.id === action.task.id){
                 return action.task
-        } else return task
+        } else {
+            return task
+        }
         })
     } 
     else if (action.type === 'deleted') {
