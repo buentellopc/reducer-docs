@@ -1,31 +1,30 @@
-import { useState } from 'react';
 import AddTask from './AddTask.js';
 import TaskList from './TaskList.js';
+import {useReducer} from 'react';
 
 export default function TaskApp() {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
 
   function handleAddTask(text) {
-    setTasks([...tasks, {
-      id: nextId++,
-      text: text,
-      done: false
-    }]);
+    dispatch({
+        type: 'added',
+        id: nextId++,
+        text: text,
+    });
   }
 
   function handleChangeTask(task) {
-    setTasks(tasks.map(t => {
-      if (t.id === task.id) {
-        return task;
-      } else {
-        return t;
-      }
-    }));
+    dispatch({
+        type: 'changed',
+        task: task
+    });
   }
 
   function handleDeleteTask(taskId) {
-    setTasks(
-      tasks.filter(t => t.id !== taskId)
+    dispatch({
+        type: 'deleted',
+        id: taskId
+    }
     );
   }
 
@@ -50,3 +49,25 @@ const initialTasks = [
   { id: 1, text: 'Watch a puppet show', done: false },
   { id: 2, text: 'Lennon Wall pic', done: false },
 ];
+
+function tasksReducer(tasks, action) {
+    if (action.type == 'added') {
+        return [...tasks, {id: action.id, text: action.text, done: true}]
+    } 
+    else if (action.type === 'changed'){
+        return tasks.map(task => {
+            if (task.id === action.task.id){
+                return action.task
+        } else {
+            return task
+        }
+        })
+    } 
+    else if (action.type === 'deleted') {
+        return tasks.filter(task => task.id != action.id)
+    }
+    else {
+        throw Error('Unkown action: ' + action.type)
+    }
+    
+}
