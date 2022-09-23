@@ -1,0 +1,12 @@
+{
+  "name": "reducer-docs",
+  "main": "/index.js",
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "^4.0.0"
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "description": ""
+}
